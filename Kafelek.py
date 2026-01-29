@@ -143,6 +143,7 @@ class Kafelek:
         if kierunek == naz.S:dy = -40
         if kierunek == naz.E:dx = 40
         if kierunek == naz.W:dx = -40
+        if kierunek == naz.CENTER: dx,dy =0,0
         return (dx,dy)
     def rysuj_hotspoty(self,meneger):
         x_kafelka, y_kafelka = self.grid_x, self.grid_y

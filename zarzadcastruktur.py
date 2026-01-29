@@ -4,22 +4,29 @@ import nazwy
 import gracz
 naz = nazwy.nazwy()
 class Menedzer_Struktur:
-    def __init__(self):
+      def __init__(self):
         self.struktury = [] # tab na wszystkie aktywne strukuty
         self.next_id =1
         self.mapa = {} # mapa elementow (x,y,kierunek) -> struktura
-    def nowa_strukura(self,typ):
+        self.zajete_pola ={} #prosty slownik zawierajacy kafelek dla danego x/y_grid
+      def nowa_strukura(self,typ):
             s = struktura.Struktura(typ,self.next_id)
             self.struktury.append(s)
             self.next_id+=1
             return s
-    def usun_strukture(self,strukt):
+      def usun_strukture(self,strukt):
          if strukt in self.struktury:
               self.struktury.remove(strukt)
-    def polozenie_kafelka(self,kafelek,gracze):
-         x_grid, y_grid = kafelek.grid_x, kafelek.grid_y
-         for idx, segment in enumerate(kafelek.polaczenia):
+      def polozenie_kafelka(self,kafelek,gracze):
+            x_grid, y_grid = kafelek.grid_x, kafelek.grid_y
+            self.zajete_pola[(x_grid,y_grid)] = kafelek
+            for idx, segment in enumerate(kafelek.polaczenia):
                 typ = segment["typ"]
+                if typ == "klasztor":
+                      aktywna_struktura = self.nowa_strukura(typ)
+                      self.mapa[(x_grid,y_grid,segment["poloczenia"][0])] = aktywna_struktura
+                      aktywna_struktura.dodaj_element(x_grid, y_grid,idx, segment)
+                      continue
                 strony_segmentu = segment["poloczenia"]
                 znalezione_strukury =set() #set zeby nie bylo powtorzen
                 for strona in strony_segmentu:
@@ -55,9 +62,10 @@ class Menedzer_Struktur:
                 for strona in strony_segmentu:
                       self.mapa[(x_grid,y_grid,strona)] = aktywna_struktura
                 self.sprawdz_czy_zamknieta(aktywna_struktura)
+            self.aktualizacja_klasztorow() 
                 
 
-    def znajdz_sasiada(self, x,y,strona):
+      def znajdz_sasiada(self, x,y,strona):
         
         dx,dy =0,0
         przeciwna = " "
@@ -69,16 +77,36 @@ class Menedzer_Struktur:
         klucz = (x+dx, y+dy, przeciwna)
         
         return self.mapa.get(klucz)
-    def aktualizuj_ref(self, do_scalenia,aktywna):
+      def aktualizuj_ref(self, do_scalenia,aktywna):
           for klucz, struktura in self.mapa.items():
                 if struktura == do_scalenia:
                       self.mapa[klucz] = aktywna
-    def sprawdz_czy_zamknieta(self,struktura):
+      def sprawdz_czy_zamknieta(self,struktura):
             zamknieta = True
             tarcze = 0
             katedra = False
             karczma = False
-            
+            #dla klasztorow
+            if struktura.typ == naz.KLASZTOR and not struktura.czy_zamknieta:
+                  
+                  (stare_x,stare_y,_,_) = struktura.elementy[0]
+                  punkty = 0
+                  for x in [-1,0,1]:
+                        for y in [-1,0,1]:
+                             if self.zajete_pola.get((stare_x+ x,stare_y+ y)):
+                                  punkty+=1
+                  if punkty ==9:
+                       self.struktura.czy_zamknieta  = True
+                  struktura.punkty = punkty
+                  return
+                  
+
+
+
+
+
+            #dla drog i miast
+
             liczba_elemtentow = set()
             for (x,y,id,segment) in struktura.elementy:
                 liczba_elemtentow.add((x,y,id))
@@ -108,9 +136,16 @@ class Menedzer_Struktur:
             punkty = (len(liczba_elemtentow)+tarcze)*mnoznik
             struktura.punkty = punkty
             
-    def zajecie_struktury(self,x_grid,y_grid,kierunek,gracz=None,pionek = None):
-          self.mapa[(x_grid,y_grid,kierunek)].zajeta= [gracz] #jak powstanie klasa gracz zmian na gracz.kolor
+      def zajecie_struktury(self,x_grid,y_grid,kierunek,gracz=None,pionek = None):
+          self.mapa[(x_grid,y_grid,kierunek)].zajeta= [gracz] 
           self.mapa[(x_grid,y_grid,kierunek)].pionki = pionek
+      def aktualizacja_klasztorow(self):
+           for struktura in self.struktury:
+                if struktura.typ == naz.KLASZTOR:
+                     self.sprawdz_czy_zamknieta(struktura)
+                  
+                       
+                
             
                     
                         

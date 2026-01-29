@@ -35,6 +35,7 @@ class Struktura:
                 print("test",ilosc)
                 if ilosc > maxi:
                     zwyciesca =[gracz]
-                if ilosc == maxi and ilosc != 0:
+                    maxi = ilosc
+                elif ilosc == maxi and ilosc != 0:
                     zwyciesca.append(gracz)    
         return zwyciesca     

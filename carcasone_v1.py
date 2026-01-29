@@ -51,7 +51,8 @@ wszystkie_kafelki = {
     poloczenia=[{"typ": naz.MIASTO, "poloczenia":[naz.N], "tarcza" :False, "katedra" : False},
                 {"typ": naz.DROGA, "poloczenia":[naz.W], "karczma":False},
                 {"typ": naz.DROGA, "poloczenia":[naz.E], "karczma":False},
-                {"typ": naz.DROGA, "poloczenia":[naz.S], "karczma":False}],),                                                          
+                {"typ": naz.DROGA, "poloczenia":[naz.S], "karczma":False},
+                {"typ": naz.KLASZTOR, "poloczenia":[naz.CENTER]}],),                                                          
 }
 pula = [ r"E:\__priv\python\__pv\carcasonne\kafelki\kafelek1.png"]*3
 pula.extend([ r"E:\__priv\python\__pv\carcasonne\kafelki\kafelek2.png"])
@@ -70,17 +71,19 @@ test = [ r"E:\__priv\python\__pv\carcasonne\kafelki\kafeleka01.png"]*3
 
 
 #do testowania, usun potem
-# del pula
-# pula = copy.deepcopy(test)
-# pula.extend(test)
+del pula
+pula = copy.deepcopy(test)
+
 ##
 
 
 liczba_graczy =2
 gracze = []
 
-gracze.append(gracz.Gracz("czarny", "pierwszy"))
+gracze.append(gracz.Gracz("bialy", "pierwszy"))
 gracze.append(gracz.Gracz("niebieski", "drugi"))
+#gracze.append(gracz.Gracz("czarny", "rudy"))
+
 
 
 class GameView(arcade.View):
@@ -89,7 +92,12 @@ class GameView(arcade.View):
         super().__init__()
         self.camera = None
         self.rozmiar_kafelka = 100
-
+        self.poczatek_gry = True
+        self.ui_poczatek = arcade.gui.UIManager()
+        self.ulozenie_poczatku = arcade.gui.UIGridLayout(
+            column_count=2, row_count=3, horizontal_spacing=0, vertical_spacing=20
+        )
+#do dorobienia ui poczatku gry - wpisywanie nazw uzytkwnikow i wybor kolorow
 
         self.ui_glowne = arcade.gui.UIManager()
         
@@ -600,3 +608,7 @@ def main():
 
 
 main()
+for struktura in meneger.struktury:
+    struktura.dodaj_punkty(gracze)
+for gracz in gracze:
+    print(gracz.id, " ",gracz.punkty)

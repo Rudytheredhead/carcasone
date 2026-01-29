@@ -3,10 +3,12 @@ class nazwy:
         self.MIASTO = "miasto"
         self.DROGA = "droga"
         self.POLE  = "pole"
+        self.KLASZTOR = "klasztor"
         self.N = "N"
         self.S = "S"
         self.E = "E"
         self.W = "W"
+        self.CENTER = "center"
 class fazy:
     def __init__(self):
         
