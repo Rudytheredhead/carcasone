@@ -1,3 +1,5 @@
+import nazwy
+naz = nazwy.nazwy()
 class Struktura:
     def __init__(self,typ,id):
         self.typ = typ
@@ -5,6 +7,8 @@ class Struktura:
         self.czy_zamknieta = False
         self.elementy = []
         self.zajeta =False
+        if self.typ == naz.POLE:
+            self.miasta_na_polu = set()
 
 
         self.punkty = 0
@@ -15,7 +19,7 @@ class Struktura:
         self.elementy.extend(nowa_strukt.elementy)
     def dodaj_punkty(self,gracze):
         zwyciesca = self.znajdz_zwyciezce()
-        print(zwyciesca)
+        
         
         if zwyciesca is not None:
             for gracz in gracze:
@@ -23,7 +27,7 @@ class Struktura:
 
             
                     gracz.punkty += self.punkty
-                    print(gracz.punkty)
+                    
                      #do zrobienia klasa gracz z iloscia punktow
     def znajdz_zwyciezce(self):
         maxi = 0
@@ -32,7 +36,7 @@ class Struktura:
         if self.zajeta is not False:
             for gracz in self.zajeta:
                 ilosc = self.zajeta.count(gracz)
-                print("test",ilosc)
+                
                 if ilosc > maxi:
                     zwyciesca =[gracz]
                     maxi = ilosc

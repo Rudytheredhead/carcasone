@@ -63,7 +63,7 @@ pula.extend( [ r"E:\__priv\python\__pv\carcasonne\kafelki\kafelek6.png"]*3)
 pula.extend([ r"E:\__priv\python\__pv\carcasonne\kafelki\kafelek7.png"]*2)
 pula.extend( [r"E:\__priv\python\__pv\carcasonne\kafelki\kafelek8.png"]*3)
 pula.extend( [ r"E:\__priv\python\__pv\carcasonne\kafelki\kafelek9.png"]*3)
-test = [ r"E:\__priv\python\__pv\carcasonne\kafelki\kafeleka01.png"]*3
+test = [ r"E:\__priv\python\__pv\carcasonne\kafelki\kafeleka01.png"]*4
 
 
 
@@ -332,7 +332,8 @@ class GameView(arcade.View):
         
 
     def on_key_press(self, key, key_modifiers):
-        print(key)
+        
+
         if self.faza == fazy.KAFELEK:
             if key == 100 or key ==65363:
                 self.sprite_wylosowany.angle += 90
@@ -404,7 +405,7 @@ class GameView(arcade.View):
 
 
                         if czy_mozna:           
-                            print("test")
+                           
                             self.poloz_kafelek_na_siatce(self.wylosowany_kafelek, x_grid, y_grid)
                             self.losuj_nowy_kafelek()
                             
@@ -416,7 +417,7 @@ class GameView(arcade.View):
               
 
                     pionek,kierunek = (self.swierzo_postawiony_kafelek.czy_nacisnieto_hotspot(world_x,world_y,czy_polozyc_pionek = gracze[self.aktywny_gracz].kolor, meneger= meneger))
-                    print(pionek,kierunek)
+                    
                     if pionek is not None:
                         if meneger.mapa[(x_grid,y_grid,kierunek)].zajeta is False:
                             sprite = pionek.do_sprite()

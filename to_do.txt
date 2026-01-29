@@ -1,0 +1,23 @@
+TO_DO_LISTA_POLA.txt
+
+1. KLASA STRUKTURA (struktura.py)
+   [ ] W metodzie __init__:
+       Dodać pole: self.miasta_na_lace = set() done
+
+2. KLASA MENEDZER_STRUKTUR (menedzer.py)
+   [ ] Zmodyfikować metodę znajdz_sasiada(x, y, strona): done
+       
+   
+   [ ] Zmodyfikować metodę polozenie_kafelka(kafelek, gracze):
+      
+   [ ] Zmodyfikować metodę sprawdz_czy_zamknieta(struktura):
+     
+
+   [ ] Zmodyfikować metodę zajecie_struktury(x, y, kierunek, ...):
+      
+
+   [ ] Dodać nową metodę podlicz_punkty_za_laki(gracze):
+      
+3. DANE WEJŚCIOWE / KONFIGURACJA (main.py lub plik z kafelkami)
+   [ ] Zaktualizować definicje kafelków (słowniki/JSON):
+       

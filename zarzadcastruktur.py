@@ -39,10 +39,21 @@ class Menedzer_Struktur:
                 aktywna_struktura = None
                 nowi_gracze = []
                 nowe_pionki =[]
+                nowe_miasta =set()
+                #dodawanie miast do pola
+                if typ == naz.POLE:
+                        kierunki_glowne =set()
+                        for strona in strony_segmentu:
+                              kierunki_glowne.add(strona[0])
+                        for strona in kierunki_glowne:
+                              sasiad_stuktura = self.znajdz_sasiada(x_grid,y_grid, strona)
+                              if sasiad_stuktura.typ == naz.MIASTO:
+                                   nowe_miasta.add(sasiad_stuktura)
+                  
                 if len(lista_strukur) == 0:
                       aktywna_struktura = self.nowa_strukura(typ)
                 else:
-                      
+                      #do dodanie - dodawanie miast ze starych struktur
                       aktywna_struktura = lista_strukur[0]
                       if lista_strukur[0].zajeta is not False:
                             nowi_gracze.extend(lista_strukur[0].zajeta)
@@ -67,12 +78,17 @@ class Menedzer_Struktur:
 
       def znajdz_sasiada(self, x,y,strona):
         
+        
+             
+             
+        
         dx,dy =0,0
         przeciwna = " "
-        if strona == naz.N: dx, dy, przeciwna = 0, 1, naz.S
-        elif strona == naz.S: dx, dy, przeciwna = 0, -1, naz.N
-        elif strona == naz.E: dx, dy, przeciwna = 1, 0, naz.W
-        elif strona == naz.W: dx, dy, przeciwna = -1, 0, naz.E
+        if strona[0] == naz.N: dx, dy = 0, 1
+        elif strona[0] == naz.S: dx, dy = 0, -1
+        elif strona[0] == naz.E: dx, dy = 1, 0
+        elif strona[0] == naz.W: dx, dy = -1, 0
+        przeciwna = naz.OPOZYTY_POLA.get(strona)
 
         klucz = (x+dx, y+dy, przeciwna)
         

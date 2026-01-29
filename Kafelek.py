@@ -7,6 +7,8 @@ import pionek
 import numpy as np
 naz = nazwy.nazwy()
 def obrot_kierunku(kierunek, wskazowki = True):
+    if kierunek == naz.CENTER:
+        return naz.CENTER
     if wskazowki:
         if kierunek == naz.N:
             return naz.E
@@ -33,6 +35,13 @@ testowe_poloczenie = [
     {"typ":naz.MIASTO, "poloczenia":[naz.N], "tarcza":False, "katedra":False},
     {"typ": naz.DROGA, "poloczenia":[naz.E, naz.W], "karczma" : False}
   ]
+
+testowe_poloczenie2 = [
+    {"typ": naz.DROGA, "poloczenia":[naz.E, naz.W], "karczma" : False},
+    {"typ":naz.POLE, "poloczenia":[naz.WG,naz.NL,naz.NP,naz.EG]},
+    {"typ":naz.POLE, "poloczenia":[naz.WD,naz.SL,naz.SP,naz.ED]}
+
+]
 class Kafelek:
     def __init__(self, image_path, n, e, s, w,czy_klasztor=False,czy_katedra=False, czy_karczma=False, grid_x=None, grid_y=None,kat = 0,poloczenia = None):
         self.image_path = image_path
@@ -123,6 +132,7 @@ class Kafelek:
             
             hotspot = {"typ":segment["typ"], "polozenie":[], "kierunek":[]}
             czy_zajete = False
+            
             for idx,poloczenie in enumerate(segment["poloczenia"]):
                 if meneger.mapa.get((self.grid_x,self.grid_y, poloczenie)).zajeta is not False:
                     continue
@@ -165,7 +175,7 @@ class Kafelek:
         x_kafelka, y_kafelka = x_kafelka*100, y_kafelka*100
         
         tablica = self.get_hotspoty(meneger)
-        print(tablica)
+       
         if not tablica:
             return None,None
         
@@ -176,9 +186,9 @@ class Kafelek:
                 x, y = x_kafelka+dx, y_kafelka+dy
                 odleglosc_x,odleglosc_y = mouse_x - x,mouse_y-y
                 odleglosc = np.sqrt(odleglosc_y**2 + odleglosc_x**2)
-                print(odleglosc, x,y )
-                print(mouse_x,mouse_y)
+                
                 if odleglosc<=10:
+                    
                     kierunek=  hotspoty["kierunek"][idx]
                     if czy_polozyc_pionek:
                         if kierunek == naz.E :kat = 90
@@ -186,7 +196,7 @@ class Kafelek:
                         else: kat = 0
                         pion = pionek.Pionek(kolor = czy_polozyc_pionek,kat = kat)#kolor gracza
                         pion.x , pion.y = x,y
-                        #print(sprite)
+        
         if kierunek is None:
             return None,None
         if czy_polozyc_pionek:

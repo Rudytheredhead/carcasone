@@ -1,2 +1,2 @@
-a = {"a":1}
-print(a.get("b"))
+a= "aa"
+print(len(a))
