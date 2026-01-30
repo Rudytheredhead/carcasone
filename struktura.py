@@ -13,7 +13,10 @@ class Struktura:
 
         self.punkty = 0
         self.pionki = None
+
+        
     def dodaj_element(self, x_grid, y_grid, nowy_id,poloczenia):
+        print(self.typ,self.elementy)
         self.elementy.append((x_grid,y_grid,nowy_id,poloczenia))
     def scal(self, nowa_strukt):
         self.elementy.extend(nowa_strukt.elementy)
@@ -30,6 +33,8 @@ class Struktura:
                     
                      #do zrobienia klasa gracz z iloscia punktow
     def znajdz_zwyciezce(self):
+        if not self.zajeta:
+            return None
         maxi = 0
         zwyciesca = None
        

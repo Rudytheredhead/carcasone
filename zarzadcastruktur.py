@@ -40,25 +40,21 @@ class Menedzer_Struktur:
                 nowi_gracze = []
                 nowe_pionki =[]
                 nowe_miasta =set()
-                #dodawanie miast do pola
-                if typ == naz.POLE:
-                        kierunki_glowne =set()
-                        for strona in strony_segmentu:
-                              kierunki_glowne.add(strona[0])
-                        for strona in kierunki_glowne:
-                              sasiad_stuktura = self.znajdz_sasiada(x_grid,y_grid, strona)
-                              if sasiad_stuktura.typ == naz.MIASTO:
-                                   nowe_miasta.add(sasiad_stuktura)
-                  
+                #dodawanie miast do pola -> pole w kafelek.poloczenia zawsze jest po miescie wiec jest ok 
+                if typ == naz.POLE and segment[naz.MIASTO]:
+                        for kierunek in segment[naz.MIASTO]:
+                              nowe_miasta.add(self.mapa.get((x_grid,y_grid,kierunek)))
                 if len(lista_strukur) == 0:
                       aktywna_struktura = self.nowa_strukura(typ)
                 else:
-                      #do dodanie - dodawanie miast ze starych struktur
+                     
                       aktywna_struktura = lista_strukur[0]
                       if lista_strukur[0].zajeta is not False:
                             nowi_gracze.extend(lista_strukur[0].zajeta)
                             nowe_pionki.extend(lista_strukur[0].pionki)
                       for do_scalenia in lista_strukur[1:]:
+                            if typ == naz.POLE:
+                                 nowe_miasta.update(do_scalenia.miasta_na_polu) 
                             aktywna_struktura.scal(do_scalenia)
                             self.aktualizuj_ref(do_scalenia, aktywna_struktura)
                             if do_scalenia.zajeta is not False:
@@ -67,13 +63,15 @@ class Menedzer_Struktur:
 
                             self.usun_strukture(do_scalenia)
                 aktywna_struktura.dodaj_element(x_grid,y_grid,idx,segment)
+                aktywna_struktura.miasta_na_polu = nowe_miasta
                 if nowi_gracze != []:
                       aktywna_struktura.zajeta = nowi_gracze
                       aktywna_struktura.pionki = nowe_pionki
                 for strona in strony_segmentu:
                       self.mapa[(x_grid,y_grid,strona)] = aktywna_struktura
                 self.sprawdz_czy_zamknieta(aktywna_struktura)
-            self.aktualizacja_klasztorow() 
+            self.aktualizacja_klasztorow()
+        
                 
 
       def znajdz_sasiada(self, x,y,strona):
@@ -89,15 +87,33 @@ class Menedzer_Struktur:
         elif strona[0] == naz.E: dx, dy = 1, 0
         elif strona[0] == naz.W: dx, dy = -1, 0
         przeciwna = naz.OPOZYTY_POLA.get(strona)
+     
 
         klucz = (x+dx, y+dy, przeciwna)
         
         return self.mapa.get(klucz)
       def aktualizuj_ref(self, do_scalenia,aktywna):
-          for klucz, struktura in self.mapa.items():
-                if struktura == do_scalenia:
-                      self.mapa[klucz] = aktywna
+          if do_scalenia.typ == naz.MIASTO:
+               for strukt in self.struktury:
+                    if strukt.typ == naz.POLE and aktywna in strukt.miasta_na_polu:
+                         strukt.miasta_na_polu.remove(do_scalenia)
+                         strukt.miasta_na_polu.add(aktywna)
+
+      #     for klucz, struktura in self.mapa.items():
+      #           if struktura == do_scalenia:
+      #                 self.mapa[klucz] = aktywna
+          for x,y,_,segment  in do_scalenia.elementy:
+               for kierunek in segment["poloczenia"]:
+                    self.mapa[(x,y,kierunek)] = aktywna
       def sprawdz_czy_zamknieta(self,struktura):
+            punkty = 0
+            if struktura.typ ==naz.POLE:
+                  for miasto in struktura.miasta_na_polu:
+                      if miasto.czy_zamkniete: punkty+=1
+                  struktura.punkty = punkty
+
+                           
+                  return #pola nigdy sie nie zamykaja -> chlop tam zostaje do konca
             zamknieta = True
             tarcze = 0
             katedra = False
@@ -156,9 +172,12 @@ class Menedzer_Struktur:
           self.mapa[(x_grid,y_grid,kierunek)].zajeta= [gracz] 
           self.mapa[(x_grid,y_grid,kierunek)].pionki = pionek
       def aktualizacja_klasztorow(self):
-           for struktura in self.struktury:
+             for struktura in self.struktury:
                 if struktura.typ == naz.KLASZTOR:
                      self.sprawdz_czy_zamknieta(struktura)
+      
+                              
+      
                   
                        
                 

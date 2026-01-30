@@ -38,8 +38,9 @@ testowe_poloczenie = [
 
 testowe_poloczenie2 = [
     {"typ": naz.DROGA, "poloczenia":[naz.E, naz.W], "karczma" : False},
-    {"typ":naz.POLE, "poloczenia":[naz.WG,naz.NL,naz.NP,naz.EG]},
-    {"typ":naz.POLE, "poloczenia":[naz.WD,naz.SL,naz.SP,naz.ED]}
+    {"typ": naz.MIASTO, "poloczenia":[naz.N], "karczma" : False},
+    {"typ":naz.POLE, "poloczenia":[naz.WG,naz.EG], "miasto":[naz.N]},
+    {"typ":naz.POLE, "poloczenia":[naz.WD,naz.SL,naz.SP,naz.ED],"miasto":False}
 
 ]
 class Kafelek:
